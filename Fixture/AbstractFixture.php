@@ -63,7 +63,23 @@ abstract class AbstractFixture
         $metadata = $this->getMetaDataForClass($class);
 
         foreach ($this->file['fixtures'] as $reference => $fixture_data) {
-            $object = $this->createObject($class, $fixture_data, $metadata);
+
+            $object = null;
+            // If given, try to find the object using the reference_column
+            if(isset($this->file['reference_column'])) {
+                $reference_column = $this->file['reference_column'];
+                $object = $this->manager->getRepository($class)->findOneBy(array($reference_column => $fixture_data[$reference_column]));
+                if($object !== null) {
+                    // If object found, update it
+                    $this->setData($object, $fixture_data, $metadata);
+                }
+            }
+
+            // Create a new object
+            if($object === null) {
+                $object = $this->createObject($class, $fixture_data, $metadata);
+            }
+
             $this->loader->setReference($reference, $object);
             if (!$this->isReverseSaveOrder()) {
                 $manager->persist($object);
@@ -111,4 +127,8 @@ abstract class AbstractFixture
      * @return Object
      */
     abstract public function createObject($class, $data, $metadata, $options = array());
+
+    protected function setData($object, $data, $metadata) {
+        // Should be overwritten
+    }
 }

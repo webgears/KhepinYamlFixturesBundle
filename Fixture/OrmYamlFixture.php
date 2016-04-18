@@ -8,15 +8,12 @@ class OrmYamlFixture extends AbstractFixture
 {
     public function createObject($class, $data, $metadata, $options = array())
     {
-        $mapping = array_keys($metadata->fieldMappings);
-        $associations = array_keys($metadata->associationMappings);
-
         $class = new \ReflectionClass($class);
         $constructArguments = array();
         if (isset($data['__construct'])) {
             $arguments = $data['__construct'];
             if (is_array($arguments)) {
-                foreach ($arguments as $argument) {
+                foreach($arguments as $argument) {
                     if (is_array($argument)) {
                         if ($argument['type'] == 'datetime') {
                             $constructArguments[] = new \DateTime($argument['value']);
@@ -35,6 +32,16 @@ class OrmYamlFixture extends AbstractFixture
             unset($data['__construct']);
         }
         $object = $class->newInstanceArgs($constructArguments);
+
+        $this->setData($object, $data, $metadata);
+
+        return $object;
+    }
+
+    protected function setData($object, $data, $metadata)
+    {
+        $mapping = array_keys($metadata->fieldMappings);
+        $associations = array_keys($metadata->associationMappings);
 
         foreach ($data as $field => $value) {
             // Add the fields defined in the fistures file
@@ -65,7 +72,5 @@ class OrmYamlFixture extends AbstractFixture
             }
         }
         $this->runServiceCalls($object);
-
-        return $object;
     }
 }
