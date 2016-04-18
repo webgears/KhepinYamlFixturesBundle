@@ -44,6 +44,7 @@ class FixturesLoadCommand extends ContainerAwareCommand
                 InputOption::VALUE_NONE,
                 'Purge data by using a database-level TRUNCATE statement (only for ORM)'
             )
+            ->addOption('em', null, InputOption::VALUE_REQUIRED, 'The entity manager that will be used', null)
         ;
     }
 
@@ -63,8 +64,9 @@ class FixturesLoadCommand extends ContainerAwareCommand
                 $input->getOption('database-name')
             );
         }
+        $em = $input->getOption('em');
 
-        $this->getContainer()->get('khepin.yaml_loader')->loadFixtures($context);
+        $this->getContainer()->get('khepin.yaml_loader')->loadFixtures($context, $em);
 
         $output->writeln('done!');
     }

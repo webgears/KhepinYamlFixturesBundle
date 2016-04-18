@@ -2,6 +2,7 @@
 
 namespace Khepin\YamlFixturesBundle\Loader;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Khepin\YamlFixturesBundle\Fixture\YamlAclFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -108,8 +109,15 @@ class YamlLoader
             // if nothing is specified, we use doctrine orm for persistence
             $persistence = isset($fixture_data['persistence']) ? $fixture_data['persistence'] : 'orm';
 
+            /** @var Registry $persister */
             $persister = $this->getPersister($persistence);
-            $manager = $persister->getManagerForClass($fixture_data['model']);
+            $manager = null;
+            // Get the entity manager
+            if(func_get_arg(1)) {
+                $manager = $persister->getManager(func_get_arg(1));
+            } else {
+                $manager = $persister->getManagerForClass($fixture_data['model']);
+            }
 
             $fixture = $this->getFixtureClass($persistence);
             $fixture = new $fixture($fixture_data, $this, $file);
