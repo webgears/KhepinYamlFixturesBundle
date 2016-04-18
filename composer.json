@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Symfony bundle for easy loading of YAML based fixtures.",
     "keywords": ["data fixtures doctrine yaml"],
-    "homepage": "https://github.com/khepin/KhepinYamlFixturesBundle",
+    "homepage": "https://github.com/webgears/KhepinYamlFixturesBundle",
     "license": "MIT",
     "authors": [
         {

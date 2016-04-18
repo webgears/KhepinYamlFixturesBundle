@@ -1,9 +1,13 @@
+------
+
+This branch was forked to allow updates of entities via ORM. Updating via Mongo or other providers is currently not supported.
+
+------
+
 This bundles provides you with a way to use YAML based fixtures for Symfony2 and
 Doctrine2. It currently works with either Doctrine ORM or Doctrine MongoDB ODM.
 Other backend are not implemented yet but can be implemented very easily.
 
-**Travic CI status:** [![Build Status](https://secure.travis-ci.org/khepin/KhepinYamlFixturesBundle.png?branch=master)](http://travis-ci.org/khepin/KhepinYamlFixturesBundle)
-**Scrutinizer CI:** [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/khepin/KhepinYamlFixturesBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/khepin/KhepinYamlFixturesBundle/?branch=master)
 
 # Installation
 
@@ -74,6 +78,7 @@ You can only define fixtures for one class per file. Fixture files are configure
     tags: [ test, dev, prod ] # optional parameter
     save_in_reverse: false # optional parameter
     persistence: orm (default)| mongodb # lets you choose if these fixtures should be saved through the orm or through mongodb.
+    reference_column: name # optional parameter, if given it will update entities identified by this column. Therefore this field should never change.
     fixtures:
         michael:
             name: Michael
